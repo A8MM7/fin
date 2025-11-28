@@ -1,0 +1,90 @@
+version: 2
+
+models:
+  - name: dim_loans
+    description: "Dimension table for loans, holding the latest state per loan (SCD1, no history)."
+
+    tests:
+      - dbt_utils.expression_is_true:
+          name: loan_status_balance_and_repaid_at_consistency
+          expression: >
+            (
+              (loan_status = 'Repaid'
+               AND principal_balance = 0
+               AND loan_repaid_at IS NOT NULL)
+              OR
+              (loan_status in ('Active', 'Defaulted')
+               AND loan_repaid_at IS NULL)
+            )
+
+    columns:
+      - name: loan_id
+        description: "Business key of the loan. Unique in this dimension."
+        tests:
+            - unique:
+                name: loan_id_is_unique
+            - not_null:
+                name: loan_id_is_not_null
+
+      - name: loan_status
+        description: "Current status of the loan (e.g. Active, Repaid)."
+        tests:
+          - not_null:
+              name: loan_status_is_not_null
+          - accepted_values:
+              name: loan_status_has_accepted_values
+              values: ['Active', 'Repaid', 'Defaulted']
+
+      - name: loan_issued_at
+        description: "Timestamp when the loan was initially issued."
+        tests:
+          - not_null:
+              name: loan_issued_at_is_not_null
+
+      - name: loan_repaid_at
+        description: "Timestamp when the loan was fully repaid, if applicable. NULL for active loans."
+
+      - name: principal_balance
+        description: "Current outstanding principal balance of the loan."
+        tests:
+          - not_null:
+              name: principal_balance_is_not_null
+          - dbt_utils.expression_is_true:
+              name: principal_balance_is_non_negative
+              expression: ">= 0"
+
+      - name: principal_debt
+        description: "Outstanding principal amount in arrears (if any)."
+        tests:
+          - not_null:
+              name: principal_debt_is_not_null
+          - dbt_utils.expression_is_true:
+              name: principal_debt_is_non_negative
+              expression: ">= 0"
+
+      - name: principal_paid_total
+        description: "Total principal repaid on this loan."
+        tests:
+          - not_null:
+              name: principal_paid_total_is_not_null
+          - dbt_utils.expression_is_true:
+              name: principal_paid_total_is_non_negative
+              expression: ">= 0"
+
+      - name: interest_paid_total
+        description: "Total interest paid on this loan."
+        tests:
+          - not_null:
+              name: interest_paid_total_is_not_null
+          - dbt_utils.expression_is_true:
+              name: interest_paid_total_is_non_negative
+              expression: ">= 0"
+
+      - name: maintenance_fee_paid_total
+        description: "Total maintenance fees paid on this loan."
+        tests:
+          - not_null:
+              name: maintenance_fee_paid_total_is_not_null
+          - dbt_utils.expression_is_true:
+              name: maintenance_fee_paid_total_is_non_negative
+              expression: ">= 0"

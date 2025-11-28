@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: stg_loans
+    description: "Staging view for loans. Current state only (SCD1 semantics)."
+    columns:
+      - name: loan_id
+        tests:
+          - not_null:
+              name: loan_id_is_not_null
+
+      - name: loan_status
+        tests:
+          - not_null:
+              name: loan_status_is_not_null
+
+      - name: loan_issued_at
+        tests:
+          - not_null:
+              name: loan_issued_at_is_not_null
+
+      - name: loan_repaid_at
+
+      - name: principal_balance
+        tests:
+          - not_null:
+              name: principal_balance_is_not_null
+
+      - name: principal_debt
+        tests:
+          - not_null:
+              name: principal_debt_is_not_null
+
+      - name: principal_paid_total
+        tests:
+          - not_null:
+              name: principal_paid_total_is_not_null
+
+      - name: interest_paid_total
+        tests:
+          - not_null:
+              name: interest_paid_total_is_not_null
+
+      - name: maintenance_fee_paid_total
+        tests:
+          - not_null:
+              name: maintenance_fee_paid_total_is_not_null
