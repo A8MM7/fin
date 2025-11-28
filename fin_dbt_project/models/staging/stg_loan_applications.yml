@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: stg_loan_applications
+    description: "Staging view on top of snp_loan_applications snapshot. One row per application version (SCD2)"
+    columns:
+      - name: application_id
+        tests:
+          - not_null:
+                name: application_id_is_not_null
+
+      - name: applicant_id
+        tests:
+          - not_null:
+                name: applicant_id_is_not_null
+
+      - name: country_code
+        tests:
+          - not_null:
+                name: country_code_is_not_null
+
+      - name: loan_product_type_id
+        tests:
+          - not_null:
+                name: loan_product_type_id_is_not_null
+
+      - name: application_started_at
+        tests:
+          - not_null:
+                name: application_started_at_is_not_null
+
+      - name: requested_amount
+        tests:
+          - not_null:
+                name: requested_amount_is_not_null
+          - dbt_utils.expression_is_true:
+                name: requested_amount_non_negative
+                expression: ">= 0"
+
+      - name: issued_loan_id
+
+      - name: loan_issued_at
+
+      - name: issued_amount
+        tests:
+          - dbt_utils.expression_is_true:
+                name: issued_amount_non_negative
+                expression: ">= 0"

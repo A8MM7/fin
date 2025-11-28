@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: dim_loan_applications
+    description: "Dimension table exposing the latest (current) version of each loan application, derived from int_loan_applications."
+
+    tests:
+      - dbt_utils.expression_is_true:
+            name: loan_issued_fields_all_or_none
+            expression: >
+                (
+                (issued_loan_id IS NULL AND loan_issued_at IS NULL AND issued_amount IS NULL)
+                OR
+                (issued_loan_id IS NOT NULL AND loan_issued_at IS NOT NULL AND issued_amount IS NOT NULL)
+                )
+
+    columns:
+      - name: application_id
+        description: "Business key of the loan application. Unique in the dimension."
+        tests:
+            - unique:
+                name: dim_application_id_unique
+            - not_null:
+                name: dim_application_id_not_null
+
+      - name: applicant_id
+        description: "Identifier of the applicant who submitted the loan application."
+        tests:
+          - not_null:
+                name: dim_applicant_id_not_null
+
+      - name: country_code
+        description: "Country where the loan application originated (FI, EE, LV, NL)."
+        tests:
+          - not_null:
+                name: dim_country_code_not_null
+
+      - name: loan_product_type_id
+        description: "Identifier of the loan product type chosen by the applicant."
+        tests:
+          - not_null:
+                name: dim_loan_product_type_id_not_null
+
+      - name: application_started_at
+        description: "Timestamp when the applicant started the loan application."
+        tests:
+          - not_null:
+                name: dim_application_started_at_not_null
+
+      - name: requested_amount
+        description: "Amount the applicant originally requested."
+        tests:
+          - not_null:
+                name: dim_requested_amount_not_null
+          - dbt_utils.expression_is_true:
+                name: dim_requested_amount_non_negative
+                expression: ">= 0"
+
+      - name: issued_loan_id
+        description: "Identifier of the issued loan, if the application resulted in an issued loan."
+
+      - name: loan_issued_at
+        description: "Timestamp of when the loan was issued, if applicable."
+
+      - name: issued_amount
+        description: "Actual issued loan amount. NULL if no loan was issued."
+        tests:
+          - dbt_utils.expression_is_true:
+                name: dim_issued_amount_non_negative
+                expression: ">= 0"
