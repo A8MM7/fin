@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: bondara_raw
+    database: bondara
+    schema: raw
+    description: "Latest raw data snapshots from Bondara source systems."
+
+    tables:
+      - name: ing_loan_applications
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 30, period: hour}
+        loaded_at_field: snapshot_ingested_at
