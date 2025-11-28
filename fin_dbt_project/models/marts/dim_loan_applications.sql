@@ -8,6 +8,7 @@ with current_version as (
         *
 
     from {{ ref('int_loan_applications') }}
+    
     where dbt_valid_to is null
 
 )

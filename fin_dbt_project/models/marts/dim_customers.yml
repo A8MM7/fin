@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Dimension table exposing the latest (current) version of each customer, derived from int_customers."
+
+    columns:
+      - name: borrower_id
+        description: "Business key of the customer (borrower). Unique in this dimension."
+        tests:
+            - unique:
+                name: borrower_id_is_unique
+            - not_null:
+                name: borrower_id_is_not_null
+
+      - name: country_of_residency
+        description: "Country where the customer resides (e.g. FI, EE, NL, ES)."
+        tests:
+          - not_null:
+              name: country_of_residency_is_not_null
+
+      - name: full_name
+        description: "Customer first name as recorded in the source system."
+        tests:
+          - not_null:
+              name: full_name_is_not_null
+
+      - name: phone_number
+        description: "Primary phone number of the customer."
+        tests:
+          - not_null:
+              name: phone_number_is_not_null
+              severity: warn
+
+      - name: email
+        description: "Primary email address of the customer."
+        tests:
+          - not_null:
+              name: email_is_not_null
+              severity: warn
+          - dbt_utils.expression_is_true:
+              name: email_contains_at_sign
+              expression: "LIKE '%@%'"

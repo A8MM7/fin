@@ -21,6 +21,7 @@ select
     if(issued_loan_id == 'null', null, issued_loan_id) as issued_loan_id,
     loan_issued_at,
     issued_amount,
+    
     dbt_valid_from,
     dbt_valid_to,
     dbt_scd_id,
