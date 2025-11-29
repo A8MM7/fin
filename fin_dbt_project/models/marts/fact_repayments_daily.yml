@@ -26,6 +26,15 @@ models:
             - not_null:
                 name: customer_id_is_not_null
 
+      - name: loan_product_type
+        description: "Name of the loan product type chosen by the applicant."
+        tests:
+          - not_null:
+                name: loan_product_type_is_not_null
+          - accepted_values:
+              name: loan_product_type_has_accepted_values
+              values: ['Standard', 'App', 'OneClickLoan', 'Credit']
+
       - name: report_date
         description: "Date for which this repayment is recorded."
         tests:

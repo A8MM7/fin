@@ -5,6 +5,7 @@
 select
     loan_id,
     ap.applicant_id as customer_id,
+    ap.loan_product_type,
     report_date,
     principal_balance,
     principal_debt,
