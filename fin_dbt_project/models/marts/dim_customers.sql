@@ -14,7 +14,7 @@ with current_version as (
 )
 
 select
-    borrower_id,
+    borrower_id as customer_id,
     countries.country_name as country_of_residency,
     full_name,
     phone_number,

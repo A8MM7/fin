@@ -20,6 +20,12 @@ models:
             - not_null:
                 name: loan_id_is_not_null
 
+      - name: customer_id
+        description: "Business key of the customer (borrower). Unique in this dimension."
+        tests:
+            - not_null:
+                name: customer_id_is_not_null
+
       - name: report_date
         description: "Date for which this repayment is recorded."
         tests:

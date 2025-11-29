@@ -4,6 +4,7 @@
 
 select
     loan_id,
+    ap.applicant_id as customer_id,
     report_date,
     principal_balance,
     principal_debt,
@@ -11,4 +12,7 @@ select
     interest_paid,
     maintenance_fee_paid
 
-from {{ ref('int_repayments') }}
+from {{ ref('int_repayments') }} r
+
+left join {{ ref('dim_loan_applications') }} ap 
+    on r.loan_id = ap.issued_loan_id
