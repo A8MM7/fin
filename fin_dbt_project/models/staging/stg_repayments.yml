@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: stg_repayments
+    description: "Staging view for loan repayment events."
+    columns:
+      - name: loan_id
+        tests:
+          - not_null:
+              name: loan_id_is_not_null
+
+      - name: report_date
+        tests:
+          - not_null:
+              name: report_date_is_not_null
+
+      - name: principal_balance
+        tests:
+          - not_null:
+              name: principal_balance_is_not_null
+          - dbt_utils.expression_is_true:
+              name: principal_balance_is_non_negative
+              expression: ">= 0"
+
+      - name: principal_debt
+        tests:
+          - not_null:
+              name: principal_debt_is_not_null
+          - dbt_utils.expression_is_true:
+              name: principal_debt_is_non_negative
+              expression: ">= 0"
+
+      - name: principal_paid
+        tests:
+          - not_null:
+              name: principal_paid_is_not_null
+          - dbt_utils.expression_is_true:
+              name: principal_paid_is_non_negative
+              expression: ">= 0"
+
+      - name: interest_paid
+        tests:
+          - not_null:
+              name: interest_paid_is_not_null
+          - dbt_utils.expression_is_true:
+              name: interest_paid_is_non_negative
+              expression: ">= 0"
+
+      - name: maintenance_fee_paid
+        tests:
+          - not_null:
+              name: maintenance_fee_paid_is_not_null
+          - dbt_utils.expression_is_true:
+              name: maintenance_fee_paid_is_non_negative
+              expression: ">= 0"

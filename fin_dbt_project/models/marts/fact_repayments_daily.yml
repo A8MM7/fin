@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: fact_repayments_daily
+    description: "Daily loan repayment at the grain of (loan_id, report_date)."
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          name: unique_loan_id_and_report_date
+          combination_of_columns: ['loan_id', 'report_date']
+
+    columns:
+      - name: loan_id
+        description: "Identifier of the loan to which this daily repayment belongs."
+        tests:      
+            - relationships:
+                name: loan_id_is_fk_from_dim_loans
+                to: ref('dim_loans')
+                field: loan_id
+            - not_null:
+                name: loan_id_is_not_null
+
+      - name: report_date
+        description: "Date for which this repayment is recorded."
+        tests:
+          - not_null:
+              name: report_date_is_not_null
+
+      - name: principal_balance
+        description: "Remaining principal balance of the loan as of report_date."
+        tests:
+          - not_null:
+              name: principal_balance_is_not_null
+          - dbt_utils.expression_is_true:
+              name: principal_balance_is_non_negative
+              expression: ">= 0"
+
+      - name: principal_debt
+        description: "Outstanding principal in arrears as of report_date."
+        tests:
+          - not_null:
+              name: principal_debt_is_not_null
+          - dbt_utils.expression_is_true:
+              name: principal_debt_is_non_negative
+              expression: ">= 0"
+
+      - name: principal_paid
+        description: "Principal repaid on this date"
+        tests:
+          - not_null:
+              name: principal_paid_is_not_null
+          - dbt_utils.expression_is_true:
+              name: principal_paid_is_non_negative
+              expression: ">= 0"
+
+      - name: interest_paid
+        description: "Interest repaid on this date"
+        tests:
+          - not_null:
+              name: interest_paid_is_not_null
+          - dbt_utils.expression_is_true:
+              name: interest_paid_is_non_negative
+              expression: ">= 0"
+
+      - name: maintenance_fee_paid
+        description: "Maintenance fee paid on this date"
+        tests:
+          - not_null:
+              name: maintenance_fee_paid_is_not_null
+          - dbt_utils.expression_is_true:
+              name: maintenance_fee_paid_is_non_negative
+              expression: ">= 0"
