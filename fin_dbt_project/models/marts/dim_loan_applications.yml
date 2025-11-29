@@ -19,41 +19,44 @@ models:
         description: "Business key of the loan application. Unique in the dimension."
         tests:
             - unique:
-                name: dim_application_id_unique
+                name: application_id_is_unique
             - not_null:
-                name: dim_application_id_not_null
+                name: application_id_is_not_null
 
       - name: applicant_id
         description: "Identifier of the applicant who submitted the loan application."
         tests:
           - not_null:
-                name: dim_applicant_id_not_null
+                name: applicant_id_is_not_null
 
-      - name: country_code
-        description: "Country where the loan application originated (FI, EE, LV, NL)."
+      - name: country_name
+        description: "Country name where the loan application originated"
         tests:
           - not_null:
-                name: dim_country_code_not_null
+                name: country_name_is_not_null
 
-      - name: loan_product_type_id
-        description: "Identifier of the loan product type chosen by the applicant."
+      - name: loan_product_type
+        description: "Name of the loan product type chosen by the applicant."
         tests:
           - not_null:
-                name: dim_loan_product_type_id_not_null
+                name: loan_product_type_is_not_null
+          - accepted_values:
+              name: loan_product_type_has_accepted_values
+              values: ['Standard', 'App', 'OneClickLoan', 'Credit']
 
       - name: application_started_at
         description: "Timestamp when the applicant started the loan application."
         tests:
           - not_null:
-                name: dim_application_started_at_not_null
+                name: application_started_at_is_not_null
 
       - name: requested_amount
         description: "Amount the applicant originally requested."
         tests:
           - not_null:
-                name: dim_requested_amount_not_null
+                name: requested_amount_is_not_null
           - dbt_utils.expression_is_true:
-                name: dim_requested_amount_non_negative
+                name: requested_amount_is_non_negative
                 expression: ">= 0"
 
       - name: issued_loan_id
@@ -66,5 +69,5 @@ models:
         description: "Actual issued loan amount. NULL if no loan was issued."
         tests:
           - dbt_utils.expression_is_true:
-                name: dim_issued_amount_non_negative
+                name: issued_amount_is_non_negative
                 expression: ">= 0"

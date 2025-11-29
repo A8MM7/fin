@@ -15,9 +15,12 @@ with current_version as (
 
 select
     borrower_id,
-    country_of_residency,
+    countries.country_name as country_of_residency,
     full_name,
     phone_number,
     email
 
 from current_version
+
+left join {{ ref('int_countries') }} as countries
+    on current_version.country_of_residency = countries.country_code

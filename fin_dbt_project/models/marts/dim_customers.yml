@@ -14,7 +14,7 @@ models:
                 name: borrower_id_is_not_null
 
       - name: country_of_residency
-        description: "Country where the customer resides (e.g. FI, EE, NL, ES)."
+        description: "Country where the customer resides"
         tests:
           - not_null:
               name: country_of_residency_is_not_null

@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_loan_product_types
+    description: "Mapping loan_product_type_id to a human-readable product type name."
+
+    columns:
+      - name: loan_product_type_id
+        description: "Identifier of the loan product type"
+        tests:
+          - not_null:
+              name: loan_product_type_id_is_not_null
+          - unique:
+              name: loan_product_type_id_is_unique
+
+      - name: loan_product_type
+        description: "Human-readable loan product type name (e.g. Standard, App, OneClickLoan, Credit)."
+        tests:
+          - not_null:
+              name: loan_product_type_is_not_null
+          - accepted_values:
+              name: loan_product_type_has_accepted_values
+              values: ['Standard', 'App', 'OneClickLoan', 'Credit']

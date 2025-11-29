@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_countries
+    description: "mapping country codes to names."
+
+    columns:
+      - name: country_code
+        description: "Two-letter ISO country code."
+        tests:
+          - not_null:
+              name: country_code_is_not_null
+          - unique:
+              name: country_code_is_unique
+
+      - name: country_name
+        description: "Complete country name."
+        tests:
+          - not_null:
+              name: country_name_is_not_null
